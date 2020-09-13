@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: whatsyourname-iks-depl
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: whatsyourname-iks-app
+    spec:
+      containers:
+      - name: whatsyourname-iks-pod
+        image: de.icr.io/jslabde/whatsyourname:1
+        # for local development against minikube registry
+        #imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whatsyourname-iks-service
+  labels:
+    app: whatsyourname-iks-service
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 8082
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: whatsyourname-iks-app

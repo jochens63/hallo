@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: begruessung-yaml
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: begruessung-yaml-app
+    spec:
+      containers:
+      - name: begruessung-yaml-pod
+        image: de.icr.io/jslabde/begruessung:latest
+        # for local development against minikube registry
+        #imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: begruessung-yaml-service
+  labels:
+    app: begruessung-yaml-service
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 8082
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: begruessung-yaml-app
